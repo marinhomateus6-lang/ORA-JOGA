@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORA+ JOGA</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --verde: #00C853;
+    --verde-escuro: #00952e;
+    --verde-dim: #004d1a;
+    --preto: #080C08;
+    --fundo: #0b0f0b;
+    --fundo2: #111811;
+    --fundo3: #172017;
+    --borda: rgba(0,200,83,0.15);
+    --borda2: rgba(0,200,83,0.3);
+    --texto: #e8f5e8;
+    --texto2: #7aab7a;
+    --texto3: #3d6b3d;
+    --dourado: #FFD600;
+    --prata: #B0BEC5;
+    --bronze: #A0785A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--preto);
+    color: var(--texto);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    position: relative;
+    background: var(--fundo);
+    border-bottom: 1px solid var(--borda2);
+    padding: 0;
+    overflow: hidden;
+  }
+  .header-pitch {
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 39px, #00C853 39px, #00C853 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, #00C853 39px, #00C853 40px);
+  }
+  .header-inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 32px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .logo-block { display: flex; align-items: center; gap: 16px; }
+  .logo-icon {
+    width: 54px; height: 54px;
+    background: var(--verde);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 22px;
+    color: #000;
+    letter-spacing: -1px;
+    flex-shrink: 0;
+    box-shadow: 0 0 24px rgba(0,200,83,0.35);
+  }
+  .logo-text h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 36px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    color: #fff;
+    line-height: 1;
+  }
+  .logo-text p {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--verde);
+    margin-top: 2px;
+  }
+  .header-meta {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+  .header-stat {
+    text-align: center;
+  }
+  .header-stat-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--verde);
+    line-height: 1;
+  }
+  .header-stat-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--texto3);
+    margin-top: 2px;
+  }
+  .season-badge {
+    background: var(--verde-dim);
+    border: 1px solid var(--borda2);
+    color: var(--verde);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 20px;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    display: flex;
+    gap: 4px;
+    padding: 10px 24px;
+    background: rgba(0,0,0,0.4);
+    border-bottom: 1px solid var(--borda);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  nav button {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--texto3);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 7px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  nav button:hover { color: var(--verde); border-color: var(--borda); background: var(--fundo2); }
+  nav button.active { background: var(--verde); color: #000; font-weight: 800; }
+
+  /* ─── SECTIONS ─── */
+  .section { display: none; padding: 28px 24px; animation: fadeIn 0.3s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, var(--verde-dim), transparent);
+    border-radius: 2px;
+  }
+  .title-accent {
+    color: var(--verde);
+  }
+
+  /* ─── ARTILHARIA TABLE ─── */
+  .table-wrap {
+    background: var(--fundo2);
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  table { width: 100%; border-collapse: collapse; }
+  thead tr {
+    background: rgba(0,200,83,0.06);
+    border-bottom: 1px solid var(--borda2);
+  }
+  thead th {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--texto3);
+    padding: 12px 16px;
+    text-align: left;
+  }
+  thead th:not(:nth-child(2)) { text-align: center; }
+  tbody tr {
+    border-bottom: 1px solid rgba(0,200,83,0.06);
+    transition: background 0.15s;
+  }
+  tbody tr:hover { background: var(--fundo3); }
+  tbody tr:last-child { border-bottom: none; }
+  tbody td { padding: 14px 16px; font-size: 14px; text-align: center; }
+  tbody td:nth-child(2) { text-align: left; }
+
+  .rank-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--texto3);
+    display: inline-block;
+    width: 28px;
+    text-align: center;
+  }
+  .rank-1 { color: var(--dourado); }
+  .rank-2 { color: var(--prata); }
+  .rank-3 { color: var(--bronze); }
+
+  .player-cell { display: flex; align-items: center; gap: 10px; }
+  .avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--verde-dim);
+    border: 1.5px solid var(--borda2);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--verde);
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+  .player-info-name { font-weight: 600; color: #fff; font-size: 14px; }
+  .pos-badge {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    margin-left: 6px;
+  }
+  .pos-AT { background: rgba(0,200,83,0.15); color: var(--verde); }
+  .pos-ME { background: rgba(0,150,255,0.15); color: #5ab0ff; }
+  .pos-ZG { background: rgba(255,80,80,0.15); color: #ff7070; }
+  .pos-LA { background: rgba(200,100,255,0.15); color: #c87aff; }
+
+  .stat-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .sv-gol { color: var(--verde); }
+  .sv-ast { color: #5ab0ff; }
+  .sv-mvp { color: var(--dourado); }
+
+  .bar-wrap { width: 60px; margin: 0 auto; }
+  .bar-bg { height: 3px; background: rgba(255,255,255,0.06); border-radius: 2px; }
+  .bar-fill { height: 3px; background: var(--verde); border-radius: 2px; }
+
+  /* ─── MVP SECTION ─── */
+  .mvp-hero {
+    background: var(--fundo2);
+    border: 1px solid var(--borda2);
+    border-radius: 14px;
+    padding: 28px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .mvp-hero::before {
+    content: 'MVP';
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 160px;
+    font-weight: 900;
+    position: absolute;
+    right: -16px;
+    top: -24px;
+    color: rgba(0,200,83,0.04);
+    line-height: 1;
+    pointer-events: none;
+    letter-spacing: -4px;
+  }
+  .mvp-glow {
+    position: absolute;
+    top: -60px; left: -60px;
+    width: 240px; height: 240px;
+    background: radial-gradient(circle, rgba(0,200,83,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .mvp-week-tag {
+    display: inline-block;
+    background: rgba(255,214,0,0.12);
+    border: 1px solid rgba(255,214,0,0.3);
+    color: var(--dourado);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+  }
+  .mvp-layout { display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; }
+  .mvp-avatar-big {
+    width: 90px; height: 90px;
+    border-radius: 14px;
+    background: var(--verde-dim);
+    border: 2px solid var(--verde);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 30px;
+    font-weight: 900;
+    color: var(--verde);
+    flex-shrink: 0;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0,200,83,0.2);
+  }
+  .mvp-avatar-big img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+  .mvp-info { flex: 1; min-width: 160px; }
+  .mvp-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 42px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 2px;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .mvp-sub { font-size: 13px; color: var(--texto2); margin-top: 4px; }
+  .mvp-stats-row { display: flex; gap: 20px; margin-top: 14px; flex-wrap: wrap; }
+  .mvp-stat-box {
+    background: var(--fundo3);
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    padding: 10px 16px;
+    text-align: center;
+    min-width: 70px;
+  }
+  .mvp-stat-n {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--verde);
+    line-height: 1;
+  }
+  .mvp-stat-l { font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--texto3); margin-top: 2px; }
+  .mvp-desc { font-size: 13px; color: var(--texto2); margin-top: 12px; font-style: italic; line-height: 1.6; border-left: 2px solid var(--verde); padding-left: 12px; }
+
+  .jogada-card {
+    background: var(--fundo2);
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .jogada-tag {
+    font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--dourado); margin-bottom: 6px;
+  }
+  .jogada-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 8px;
+  }
+  .jogada-desc { font-size: 13px; color: var(--texto2); line-height: 1.7; }
+  .jogada-players { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .jogada-player {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--fundo3); border: 1px solid var(--borda); border-radius: 20px;
+    padding: 4px 10px 4px 4px;
+    font-size: 12px; font-weight: 600; color: var(--texto);
+  }
+  .jogada-player .avatar { width: 22px; height: 22px; font-size: 9px; }
+
+  /* ─── JOGADORES CARDS ─── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+  }
+  .player-card {
+    background: var(--fundo2);
+    border: 1px solid var(--borda);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    position: relative;
+  }
+  .player-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--borda2);
+    box-shadow: 0 8px 24px rgba(0,200,83,0.12);
+  }
+  .player-card.mvp-star {
+    border-color: rgba(255,214,0,0.4);
+  }
+  .player-card.mvp-star:hover {
+    box-shadow: 0 8px 24px rgba(255,214,0,0.12);
+  }
+  .card-top {
+    background: var(--fundo3);
+    padding: 20px 16px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+  }
+  .card-avatar {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: var(--verde-dim);
+    border: 2px solid var(--borda2);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 24px; font-weight: 900;
+    color: var(--verde);
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .card-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+  .mvp-crown {
+    position: absolute;
+    top: 10px; right: 12px;
+    background: rgba(255,214,0,0.12);
+    border: 1px solid rgba(255,214,0,0.3);
+    color: var(--dourado);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .card-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px; font-weight: 800;
+    color: #fff; text-transform: uppercase; letter-spacing: 1px; line-height: 1;
+  }
+  .card-pos { margin-top: 5px; }
+  .card-body { padding: 14px 16px; }
+  .card-stats { display: flex; justify-content: space-around; }
+  .cs {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+  }
+  .cs-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 26px; font-weight: 800; line-height: 1;
+  }
+  .cs-label { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--texto3); }
+  .cs-gol .cs-val { color: var(--verde); }
+  .cs-ast .cs-val { color: #5ab0ff; }
+  .cs-mvp .cs-val { color: var(--dourado); }
+  .cs-divider { width: 1px; background: var(--borda); align-self: stretch; }
+
+  .mvp-bar-wrap { margin-top: 12px; }
+  .mvp-bar-label { display: flex; justify-content: space-between; font-size: 10px; color: var(--texto3); font-weight: 600; letter-spacing: 1px; margin-bottom: 4px; }
+  .mvp-bar-bg { height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; }
+  .mvp-bar-fill { height: 4px; background: linear-gradient(90deg, var(--dourado), #ffaa00); border-radius: 2px; }
+
+  /* ─── SOBRE ─── */
+  .sobre-hero {
+    background: var(--fundo2);
+    border: 1px solid var(--borda);
+    border-radius: 14px;
+    padding: 32px;
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .sobre-logo {
+    width: 80px; height: 80px;
+    background: var(--verde);
+    border-radius: 20px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 28px; color: #000;
+    margin: 0 auto 16px;
+    box-shadow: 0 0 32px rgba(0,200,83,0.3);
+  }
+  .sobre-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 52px; font-weight: 900;
+    letter-spacing: 4px; color: #fff; line-height: 1;
+  }
+  .sobre-name span { color: var(--verde); }
+  .sobre-tagline { font-size: 14px; color: var(--texto2); margin-top: 8px; }
+  .sobre-desc { font-size: 14px; color: var(--texto2); max-width: 480px; margin: 16px auto 0; line-height: 1.8; }
+  .sobre-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+  .sobre-card {
+    background: var(--fundo2); border: 1px solid var(--borda);
+    border-radius: 12px; padding: 20px; text-align: center;
+  }
+  .sobre-card-icon {
+    font-size: 28px; margin-bottom: 8px;
+  }
+  .sobre-card-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 36px; font-weight: 800; color: var(--verde);
+  }
+  .sobre-card-label { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--texto3); margin-top: 2px; }
+
+  /* ─── SCROLL ─── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--verde-dim); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-pitch"></div>
+  <div class="header-inner">
+    <div class="logo-block">
+      <div class="logo-icon">O+</div>
+      <div class="logo-text">
+        <h1>ORA+ JOGA</h1>
+        <p>Estatísticas &amp; Classificação</p>
+      </div>
+    </div>
+    <div class="header-meta">
+      <div class="header-stat">
+        <div class="header-stat-num" id="h-jogadores">28</div>
+        <div class="header-stat-label">Jogadores</div>
+      </div>
+      <div class="header-stat">
+        <div class="header-stat-num" id="h-partidas">12</div>
+        <div class="header-stat-label">Partidas</div>
+      </div>
+      <div class="header-stat">
+        <div class="header-stat-num" id="h-gols">87</div>
+        <div class="header-stat-label">Gols</div>
+      </div>
+      <div class="season-badge">Temporada 2025</div>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <button class="active" onclick="showTab('artilharia', this)">Artilharia</button>
+  <button onclick="showTab('assistencias', this)">Assistências</button>
+  <button onclick="showTab('mvp', this)">MVP da Semana</button>
+  <button onclick="showTab('jogadores', this)">Jogadores</button>
+  <button onclick="showTab('sobre', this)">Sobre o Projeto</button>
+</nav>
+
+<!-- ─── ARTILHARIA ─── -->
+<div id="artilharia" class="section active">
+  <div class="section-title"><span class="title-accent">⚽</span> Artilharia</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Jogador</th>
+          <th>Gols</th>
+          <th>Partidas</th>
+          <th>Média</th>
+          <th style="min-width:80px">Progresso</th>
+        </tr>
+      </thead>
+      <tbody id="tabela-artilharia"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ─── ASSISTÊNCIAS ─── -->
+<div id="assistencias" class="section">
+  <div class="section-title"><span class="title-accent">🎯</span> Assistências</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Jogador</th>
+          <th>Assist.</th>
+          <th>Partidas</th>
+          <th>Média</th>
+          <th style="min-width:80px">Progresso</th>
+        </tr>
+      </thead>
+      <tbody id="tabela-assistencias"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ─── MVP ─── -->
+<div id="mvp" class="section">
+  <div class="section-title"><span class="title-accent">🏆</span> MVP da Semana</div>
+
+  <div class="mvp-hero">
+    <div class="mvp-glow"></div>
+    <div class="mvp-week-tag">Semana atual — Rodada 12</div>
+    <div class="mvp-layout">
+      <div class="mvp-avatar-big" id="mvp-avatar">CR</div>
+      <div class="mvp-info">
+        <div class="mvp-name" id="mvp-nome">Carlos Renato</div>
+        <div class="mvp-sub" id="mvp-pos">Atacante · 3 MVPs no total</div>
+        <div class="mvp-stats-row">
+          <div class="mvp-stat-box">
+            <div class="mvp-stat-n sv-gol" id="mvp-gols">3</div>
+            <div class="mvp-stat-l">Gols</div>
+          </div>
+          <div class="mvp-stat-box">
+            <div class="mvp-stat-n sv-ast" id="mvp-ast">2</div>
+            <div class="mvp-stat-l">Assist.</div>
+          </div>
+          <div class="mvp-stat-box">
+            <div class="mvp-stat-n sv-mvp">★</div>
+            <div class="mvp-stat-l">MVP</div>
+          </div>
+        </div>
+        <div class="mvp-desc" id="mvp-desc">"Partida dominante, 3 gols e 2 assistências. Conduziu o time à virada nos minutos finais."</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="jogada-card">
+    <div class="jogada-tag">⚡ Jogada da Semana</div>
+    <div class="jogada-title" id="jogada-titulo">Inversão + Finalização de Esquerda</div>
+    <div class="jogada-desc" id="jogada-desc">Carlos recebeu pela direita, cortou para o meio iludindo dois marcadores e finalizou no ângulo com a perna esquerda no minuto 78. A jogada definiu o placar em 4×2 e arrancou aplausos de todos no campo.</div>
+    <div class="jogada-players">
+      <div class="jogada-player"><div class="avatar">CR</div> Carlos Renato</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── JOGADORES ─── -->
+<div id="jogadores" class="section">
+  <div class="section-title"><span class="title-accent">👥</span> Jogadores</div>
+  <div class="cards-grid" id="cards-jogadores"></div>
+</div>
+
+<!-- ─── SOBRE ─── -->
+<div id="sobre" class="section">
+  <div class="section-title"><span class="title-accent">📋</span> Sobre</div>
+  <div class="sobre-hero">
+    <div class="sobre-logo">O+</div>
+    <div class="sobre-name">ORA+ <span>JOGA</span></div>
+    <div class="sobre-tagline">Futebol de campo com alma de campeonato</div>
+    <div class="sobre-desc">
+      O ORA+ JOGA nasceu da paixão pelo futebol de campo entre amigos. Aqui registramos cada gol, cada assistência e cada momento que faz esse projeto especial. Toda semana um novo MVP, toda rodada uma nova história.
+    </div>
+  </div>
+  <div class="sobre-grid">
+    <div class="sobre-card">
+      <div class="sobre-card-icon">⚽</div>
+      <div class="sobre-card-num">87</div>
+      <div class="sobre-card-label">Gols marcados</div>
+    </div>
+    <div class="sobre-card">
+      <div class="sobre-card-icon">🎯</div>
+      <div class="sobre-card-num">54</div>
+      <div class="sobre-card-label">Assistências</div>
+    </div>
+    <div class="sobre-card">
+      <div class="sobre-card-icon">🏆</div>
+      <div class="sobre-card-num">12</div>
+      <div class="sobre-card-label">MVPs eleitos</div>
+    </div>
+    <div class="sobre-card">
+      <div class="sobre-card-icon">📅</div>
+      <div class="sobre-card-num">12</div>
+      <div class="sobre-card-label">Rodadas jogadas</div>
+    </div>
+    <div class="sobre-card">
+      <div class="sobre-card-icon">👥</div>
+      <div class="sobre-card-num">28</div>
+      <div class="sobre-card-label">Jogadores ativos</div>
+    </div>
+    <div class="sobre-card">
+      <div class="sobre-card-icon">📆</div>
+      <div class="sobre-card-num">2025</div>
+      <div class="sobre-card-label">Temporada atual</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── DADOS (atualize semanalmente) ───
+const jogadores = [
+  { id:1,  nome:"Carlos Renato",  iniciais:"CR", pos:"AT", gols:14, ast:8,  mvps:3, partidas:12 },
+  { id:2,  nome:"Diego Mota",     iniciais:"DM", pos:"ME", gols:9,  ast:12, mvps:2, partidas:11 },
+  { id:3,  nome:"Felipe Braga",   iniciais:"FB", pos:"AT", gols:11, ast:5,  mvps:2, partidas:12 },
+  { id:4,  nome:"Gustavo Lima",   iniciais:"GL", pos:"ME", gols:7,  ast:10, mvps:1, partidas:10 },
+  { id:5,  nome:"Henrique Paz",   iniciais:"HP", pos:"ZG", gols:3,  ast:7,  mvps:1, partidas:12 },
+  { id:6,  nome:"Igor Santos",    iniciais:"IS", pos:"LA", gols:6,  ast:6,  mvps:1, partidas:11 },
+  { id:7,  nome:"João Victor",    iniciais:"JV", pos:"AT", gols:8,  ast:3,  mvps:1, partidas:10 },
+  { id:8,  nome:"Lucas Ferreira", iniciais:"LF", pos:"ME", gols:5,  ast:9,  mvps:1, partidas:12 },
+  { id:9,  nome:"Marcos Pinto",   iniciais:"MP", pos:"ZG", gols:4,  ast:4,  mvps:0, partidas:9  },
+  { id:10, nome:"Rafael Cunha",   iniciais:"RC", pos:"AT", gols:10, ast:2,  mvps:0, partidas:11 },
+  { id:11, nome:"Thiago Neves",   iniciais:"TN", pos:"ME", gols:5,  ast:8,  mvps:0, partidas:10 },
+  { id:12, nome:"Vitor Alves",    iniciais:"VA", pos:"LA", gols:2,  ast:6,  mvps:0, partidas:8  },
+];
+
+const mvpAtual = {
+  jogadorId: 1,
+  rodada: 12,
+  gols: 3,
+  ast: 2,
+  descricao: '"Partida dominante, 3 gols e 2 assistências. Conduziu o time à virada nos minutos finais."',
+  jogadaTitulo: "Inversão + Finalização de Esquerda",
+  jogadaDesc: "Carlos recebeu pela direita, cortou para o meio iludindo dois marcadores e finalizou no ângulo com a perna esquerda no minuto 78. A jogada definiu o placar em 4×2 e arrancou aplausos de todos no campo.",
+};
+
+// ─── FUNÇÕES ───
+
+function getIniciais(nome) {
+  return nome.split(' ').map(p => p[0]).join('').slice(0,2).toUpperCase();
+}
+
+function renderArtilharia() {
+  const sorted = [...jogadores].sort((a,b) => b.gols - a.gols);
+  const max = sorted[0].gols;
+  const tbody = document.getElementById('tabela-artilharia');
+  tbody.innerHTML = sorted.map((j, i) => {
+    const rankClass = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
+    const media = (j.gols / j.partidas).toFixed(1);
+    const pct = Math.round((j.gols / max) * 100);
+    return `<tr>
+      <td><span class="rank-num ${rankClass}">${i+1}</span></td>
+      <td>
+        <div class="player-cell">
+          <div class="avatar">${j.iniciais}</div>
+          <span class="player-info-name">${j.nome}<span class="pos-badge pos-${j.pos}">${j.pos}</span></span>
+        </div>
+      </td>
+      <td><span class="stat-val sv-gol">${j.gols}</span></td>
+      <td style="color:var(--texto2)">${j.partidas}</td>
+      <td style="color:var(--texto2)">${media}</td>
+      <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:${pct}%"></div></div></div></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderAssistencias() {
+  const sorted = [...jogadores].sort((a,b) => b.ast - a.ast);
+  const max = sorted[0].ast;
+  const tbody = document.getElementById('tabela-assistencias');
+  tbody.innerHTML = sorted.map((j, i) => {
+    const rankClass = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
+    const media = (j.ast / j.partidas).toFixed(1);
+    const pct = Math.round((j.ast / max) * 100);
+    return `<tr>
+      <td><span class="rank-num ${rankClass}">${i+1}</span></td>
+      <td>
+        <div class="player-cell">
+          <div class="avatar">${j.iniciais}</div>
+          <span class="player-info-name">${j.nome}<span class="pos-badge pos-${j.pos}">${j.pos}</span></span>
+        </div>
+      </td>
+      <td><span class="stat-val sv-ast">${j.ast}</span></td>
+      <td style="color:var(--texto2)">${j.partidas}</td>
+      <td style="color:var(--texto2)">${media}</td>
+      <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:#5ab0ff"></div></div></div></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderMVP() {
+  const j = jogadores.find(x => x.id === mvpAtual.jogadorId);
+  if (!j) return;
+  document.getElementById('mvp-avatar').textContent = j.iniciais;
+  document.getElementById('mvp-nome').textContent = j.nome;
+  document.getElementById('mvp-pos').textContent = `${j.pos === 'AT' ? 'Atacante' : j.pos === 'ME' ? 'Meio-campo' : j.pos === 'ZG' ? 'Zagueiro' : 'Lateral'} · ${j.mvps} MVPs no total`;
+  document.getElementById('mvp-gols').textContent = mvpAtual.gols;
+  document.getElementById('mvp-ast').textContent = mvpAtual.ast;
+  document.getElementById('mvp-desc').textContent = mvpAtual.descricao;
+  document.getElementById('jogada-titulo').textContent = mvpAtual.jogadaTitulo;
+  document.getElementById('jogada-desc').textContent = mvpAtual.jogadaDesc;
+}
+
+function renderCards() {
+  const sorted = [...jogadores].sort((a,b) => b.mvps - a.mvps || b.gols - a.gols);
+  const maxMvp = Math.max(...jogadores.map(j => j.mvps), 1);
+  const grid = document.getElementById('cards-jogadores');
+  grid.innerHTML = sorted.map(j => {
+    const isMvpStar = j.mvps > 0;
+    const mvpPct = Math.round((j.mvps / maxMvp) * 100);
+    const posLabel = {AT:'Atacante',ME:'Meio-campo',ZG:'Zagueiro',LA:'Lateral'}[j.pos] || j.pos;
+    return `<div class="player-card${isMvpStar ? ' mvp-star' : ''}">
+      <div class="card-top">
+        ${j.mvps > 0 ? `<div class="mvp-crown">★ ${j.mvps}×</div>` : ''}
+        <div class="card-avatar">${j.iniciais}</div>
+        <div class="card-name">${j.nome}</div>
+        <div class="card-pos"><span class="pos-badge pos-${j.pos}">${posLabel}</span></div>
+      </div>
+      <div class="card-body">
+        <div class="card-stats">
+          <div class="cs cs-gol">
+            <div class="cs-val">${j.gols}</div>
+            <div class="cs-label">Gols</div>
+          </div>
+          <div class="cs-divider"></div>
+          <div class="cs cs-ast">
+            <div class="cs-val">${j.ast}</div>
+            <div class="cs-label">Assist.</div>
+          </div>
+          <div class="cs-divider"></div>
+          <div class="cs cs-mvp">
+            <div class="cs-val">${j.mvps}</div>
+            <div class="cs-label">MVPs</div>
+          </div>
+        </div>
+        ${j.mvps > 0 ? `
+        <div class="mvp-bar-wrap">
+          <div class="mvp-bar-label">
+            <span>MVP</span><span>${j.mvps} conquista${j.mvps > 1 ? 's' : ''}</span>
+          </div>
+          <div class="mvp-bar-bg">
+            <div class="mvp-bar-fill" style="width:${mvpPct}%"></div>
+          </div>
+        </div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showTab(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ─── INIT ───
+renderArtilharia();
+renderAssistencias();
+renderMVP();
+renderCards();
+</script>
+</body>
+</html>
